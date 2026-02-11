@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :focus-visible {
+            outline: 3px solid #3b82f6 !important;
+            outline-offset: 2px !important;
+        }
+
+        #chat-log {
+            scroll-behavior: smooth;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body class="h-full bg-slate-50 text-slate-900 font-sans antialiased">
+
+    <a href="#main-content"
+        class="absolute left-[-9999px] top-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-md focus:left-4">Skip to main
+        content</a>
+
+    <div class="flex flex-col h-screen max-w-5xl mx-auto p-4 md:p-8">
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center" aria-hidden="true">
+                    <span class="text-white font-bold text-xl">A</span>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">A11yAudit <span class="text-blue-600">v2.0</span></h1>
+            </div>
+        </header>
+
+        <main id="main-content"
+            class="flex flex-col flex-grow min-h-0 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <section id="chat-log" role="log" aria-live="polite"
+                class="flex-grow overflow-y-auto p-6 space-y-6 bg-slate-50/50">
+                <div class="flex gap-4">
+                    <div
+                        class="w-8 h-8 rounded-full bg-slate-200 flex flex-shrink-0 items-center justify-center text-xs font-bold uppercase">
+                        AI</div>
+                    <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[80%]">
+                        <p class="text-slate-700 font-medium">Hello! Paste your HTML or upload a file. I will map
+                            failures to WCAG criteria and show you exactly where the code failed.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="p-6 bg-white border-t border-slate-200">
+                <form id="audit-form" class="max-w-4xl mx-auto space-y-4">
+                    <div class="relative">
+                        <textarea id="user-input" rows="3"
+                            class="w-full p-4 pb-12 text-slate-900 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
+                            placeholder="Paste HTML code snippet here..."></textarea>
+                        <div class="absolute bottom-3 left-3 flex items-center gap-2">
+                            <label for="file-upload"
+                                class="cursor-pointer flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                </svg>
+                                Upload File
+                                <input type="file" id="file-upload" class="sr-only" accept=".html">
+                            </label>
+                            <span id="file-name-display" class="text-xs text-slate-500 italic"></span>
+                        </div>
+                        <div class="absolute bottom-3 right-3">
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded-lg font-medium text-sm transition-all shadow-md">Run
+                                Audit</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const form = document.getElementById('audit-form');
+        const chatLog = document.getElementById('chat-log');
+        const fileInput = document.getElementById('file-upload');
+        const fileNameDisplay = document.getElementById('file-name-display');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) fileNameDisplay.textContent = fileInput.files[0].name;
+        });
+
+        function addMessage(sender, content, isHTML = false) {
+            const div = document.createElement('div');
+            div.className = sender === 'user' ? "flex gap-4 justify-end" : "flex gap-4";
+            const innerContent = isHTML ? content : `<p class="text-sm">${content}</p>`;
+
+            div.innerHTML = sender === 'user' ?
+                `<div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-[80%]">${innerContent}</div>` :
+                `<div class="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center text-xs font-bold uppercase">AI</div>
+                 <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[80%] w-full">${innerContent}</div>`;
+
+            chatLog.appendChild(div);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('user-input').value;
+            const file = fileInput.files[0];
+            if (!text && !file) return;
+
+            addMessage('user', text ? "Scanning snippet..." : `Scanning ${file.name}`);
+
+            const formData = new FormData();
+            formData.append('userInput', text);
+            if (file) formData.append('auditFile', file);
+
+            try {
+                const response = await fetch('/run-audit', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.issues.length === 0) {
+                    addMessage('ai', "✅ Your code passed basic checks!");
+                } else {
+                    let htmlReport = `<div class="space-y-4">
+                        <div class="flex items-center justify-between border-b pb-2">
+                            <span class="text-lg font-bold">Health Score: ${data.score}/100</span>
+                            <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold uppercase">${data.count} Violations</span>
+                        </div>
+                        <div class="space-y-4">`;
+
+                    data.issues.forEach(issue => {
+                        htmlReport += `
+                            <div class="p-4 bg-slate-50 border-l-4 border-red-500 rounded shadow-inner">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-slate-800 text-sm">${issue.help}</h3>
+                                    <span class="text-[10px] bg-red-200 text-red-800 px-2 py-0.5 rounded uppercase font-black">${issue.impact}</span>
+                                </div>
+                                <p class="text-xs text-slate-600 mb-3">${issue.description}</p>
+                                
+                                <div class="mb-3">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Failing Code:</p>
+                                    <code class="block p-2 bg-slate-900 text-blue-300 text-[11px] rounded overflow-x-auto font-mono">
+                                        ${escapeHTML(issue.nodes[0].html)}
+                                    </code>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    ${issue.tags.map(tag => `<span class="text-[9px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold uppercase">${tag}</span>`).join('')}
+                                </div>
+                                <a href="${issue.helpUrl}" target="_blank" class="text-[11px] text-blue-600 font-bold underline hover:text-blue-800">Remediation Strategy &rarr;</a>
+                            </div>`;
+                    });
+                    htmlReport += `</div></div>`;
+                    addMessage('ai', htmlReport, true);
+                }
+            } catch (err) {
+                addMessage('ai', "❌ Fatal Error: The engine couldn't parse that HTML.");
+            }
+            form.reset();
+            fileNameDisplay.textContent = "";
+        });
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function (m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+    </script>
+</body>
+
+</html>
