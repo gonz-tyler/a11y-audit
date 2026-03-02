@@ -37,8 +37,15 @@
                 <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center" aria-hidden="true">
                     <span class="text-white font-bold text-xl">A</span>
                 </div>
-                <h1 class="text-xl font-bold tracking-tight">A11yAudit <span class="text-blue-600">v2.0</span></h1>
+                <h1 class="text-xl font-bold tracking-tight">A11yAudit <span class="text-blue-600">Sandbox</span></h1>
             </div>
+            <nav>
+                <ul class="flex gap-6 text-sm font-medium text-slate-600 items-center">
+                    <li><a href="/" class="text-blue-600 border-b-2 border-blue-600 pb-1">Snippet Sandbox</a></li>
+                    <li><a href="/dashboard" class="hover:text-slate-900 transition-colors">Full Project Dashboard</a>
+                    </li>
+                </ul>
+            </nav>
         </header>
 
         <main id="main-content"
@@ -50,8 +57,8 @@
                         class="w-8 h-8 rounded-full bg-slate-200 flex flex-shrink-0 items-center justify-center text-xs font-bold uppercase">
                         AI</div>
                     <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[80%]">
-                        <p class="text-slate-700 font-medium">Hello! Paste your HTML or upload a file. I will map
-                            failures to WCAG criteria and show you exactly where the code failed.</p>
+                        <p class="text-slate-700 font-medium">Hello! Paste your HTML snippets here. I will calculate a
+                            weighted score based on the length of your snippet and the severity of the issues.</p>
                     </div>
                 </div>
             </section>
@@ -62,23 +69,10 @@
                         <textarea id="user-input" rows="3"
                             class="w-full p-4 pb-12 text-slate-900 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
                             placeholder="Paste HTML code snippet here..."></textarea>
-                        <div class="absolute bottom-3 left-3 flex items-center gap-2">
-                            <label for="file-upload"
-                                class="cursor-pointer flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                </svg>
-                                Upload File
-                                <input type="file" id="file-upload" class="sr-only" accept=".html">
-                            </label>
-                            <span id="file-name-display" class="text-xs text-slate-500 italic"></span>
-                        </div>
                         <div class="absolute bottom-3 right-3">
                             <button type="submit"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded-lg font-medium text-sm transition-all shadow-md">Run
-                                Audit</button>
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded-lg font-medium text-sm transition-all shadow-md">Audit
+                                Snippet</button>
                         </div>
                     </div>
                 </form>
@@ -89,12 +83,10 @@
     <script>
         const form = document.getElementById('audit-form');
         const chatLog = document.getElementById('chat-log');
-        const fileInput = document.getElementById('file-upload');
-        const fileNameDisplay = document.getElementById('file-name-display');
 
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) fileNameDisplay.textContent = fileInput.files[0].name;
-        });
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]; });
+        }
 
         function addMessage(sender, content, isHTML = false) {
             const div = document.createElement('div');
@@ -102,7 +94,8 @@
             const innerContent = isHTML ? content : `<p class="text-sm">${content}</p>`;
 
             div.innerHTML = sender === 'user' ?
-                `<div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-[80%]">${innerContent}</div>` :
+                `<div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none shadow-md max-w-[80%] text-left">${innerContent}</div>
+                 <div class="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-xs font-bold text-blue-600 uppercase" aria-hidden="true">ME</div>` :
                 `<div class="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center text-xs font-bold uppercase">AI</div>
                  <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[80%] w-full">${innerContent}</div>`;
 
@@ -113,30 +106,37 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = document.getElementById('user-input').value;
-            const file = fileInput.files[0];
-            if (!text && !file) return;
+            if (!text) return;
 
-            addMessage('user', text ? "Scanning snippet..." : `Scanning ${file.name}`);
+            addMessage('user', `<p class="text-[10px] font-bold text-blue-200 uppercase mb-1 tracking-wider">Submitted Snippet:</p>
+                               <code class="block text-[11px] bg-blue-800 p-2 rounded overflow-x-auto text-blue-50 font-mono border border-blue-500/30">${escapeHTML(text)}</code>`, true);
 
             const formData = new FormData();
             formData.append('userInput', text);
-            if (file) formData.append('auditFile', file);
+            document.getElementById('user-input').value = ''; // Reset UI immediately
 
             try {
                 const response = await fetch('/run-audit', { method: 'POST', body: formData });
                 const data = await response.json();
 
-                if (data.issues.length === 0) {
-                    addMessage('ai', "✅ Your code passed basic checks!");
-                } else {
+                // Because we send a snippet, we only care about the first "file" in the array
+                const snippetReport = data.files[0];
+
+                if (snippetReport.violations && snippetReport.violations.length === 0) {
+                    addMessage('ai', "Your snippet scored 100%! No accessibility barriers detected.");
+                } else if (snippetReport.violations) {
                     let htmlReport = `<div class="space-y-4">
                         <div class="flex items-center justify-between border-b pb-2">
-                            <span class="text-lg font-bold">Health Score: ${data.score}/100</span>
-                            <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold uppercase">${data.count} Violations</span>
+                            <div>
+                                <span class="text-lg font-bold">Health Score: <span class="${snippetReport.score < 70 ? 'text-red-600' : 'text-yellow-600'}">${snippetReport.score}%</span></span>
+                                <p class="text-[10px] text-slate-500 font-medium mt-1">Based on ${snippetReport.totalElements} DOM element(s)</p>
+                            </div>
+                            <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold uppercase">${snippetReport.violations.length} Violations</span>
                         </div>
                         <div class="space-y-4">`;
 
-                    data.issues.forEach(issue => {
+                    snippetReport.violations.forEach(issue => {
+                        const failingCode = issue.nodes && issue.nodes[0] ? escapeHTML(issue.nodes[0].html) : "Code unavailable";
                         htmlReport += `
                             <div class="p-4 bg-slate-50 border-l-4 border-red-500 rounded shadow-inner">
                                 <div class="flex justify-between items-start mb-2">
@@ -144,16 +144,9 @@
                                     <span class="text-[10px] bg-red-200 text-red-800 px-2 py-0.5 rounded uppercase font-black">${issue.impact}</span>
                                 </div>
                                 <p class="text-xs text-slate-600 mb-3">${issue.description}</p>
-                                
                                 <div class="mb-3">
                                     <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Failing Code:</p>
-                                    <code class="block p-2 bg-slate-900 text-blue-300 text-[11px] rounded overflow-x-auto font-mono">
-                                        ${escapeHTML(issue.nodes[0].html)}
-                                    </code>
-                                </div>
-
-                                <div class="flex flex-wrap gap-2 mb-2">
-                                    ${issue.tags.map(tag => `<span class="text-[9px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold uppercase">${tag}</span>`).join('')}
+                                    <code class="block p-2 bg-slate-900 text-blue-300 text-[11px] rounded overflow-x-auto font-mono">${failingCode}</code>
                                 </div>
                                 <a href="${issue.helpUrl}" target="_blank" class="text-[11px] text-blue-600 font-bold underline hover:text-blue-800">Remediation Strategy &rarr;</a>
                             </div>`;
@@ -162,17 +155,9 @@
                     addMessage('ai', htmlReport, true);
                 }
             } catch (err) {
-                addMessage('ai', "❌ Fatal Error: The engine couldn't parse that HTML.");
+                addMessage('ai', "Fatal Error: The engine couldn't parse that HTML.");
             }
-            form.reset();
-            fileNameDisplay.textContent = "";
         });
-
-        function escapeHTML(str) {
-            return str.replace(/[&<>"']/g, function (m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-            });
-        }
     </script>
 </body>
 
