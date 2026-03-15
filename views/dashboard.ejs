@@ -13,30 +13,42 @@
             outline: 3px solid #3b82f6 !important;
             outline-offset: 2px !important;
         }
+
+        /* Smooth scrolling for mobile UX auto-scroll */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 
 <body class="h-full bg-slate-50 text-slate-900 font-sans antialiased flex flex-col">
 
-    <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between shadow-sm z-10">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center" aria-hidden="true">
+    <header
+        class="bg-white border-b border-slate-200 px-4 md:px-8 py-4 flex flex-col md:flex-row items-center justify-between shadow-sm z-10 gap-4 md:gap-0">
+        <div class="flex items-center justify-center gap-2 w-full md:w-auto md:justify-start">
+            <div class="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"
+                aria-hidden="true">
                 <span class="text-white font-bold text-xl">A</span>
             </div>
-            <h1 class="text-xl font-bold tracking-tight">A11yAudit <span class="text-slate-500 font-normal">| Project
-                    Dashboard</span></h1>
+            <h1
+                class="text-xl font-bold tracking-tight text-center md:text-left flex items-baseline gap-1.5 whitespace-nowrap">
+                A11yAudit <span class="text-slate-500 font-normal text-sm md:text-xl hidden md:block">| Project
+                    Dashboard</span>
+            </h1>
         </div>
-        <nav>
-            <ul class="flex gap-6 text-sm font-medium text-slate-600 items-center">
-                <li><a href="/" class="hover:text-blue-600 transition-colors">Snippet Sandbox</a></li>
-                <li><a href="/dashboard" class="text-slate-900 border-b-2 border-slate-900 pb-1">Full Project
+        <nav aria-label="Main Navigation">
+            <ul class="flex gap-4 md:gap-6 text-sm font-medium text-slate-600 items-center justify-center flex-wrap">
+                <li><a href="/" class="hover:text-blue-600 transition-colors py-2">Snippet Sandbox</a></li>
+                <li><a href="/dashboard" class="text-slate-900 border-b-2 border-slate-900 pb-1 py-2">Project
                         Dashboard</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="flex-grow flex overflow-hidden">
-        <aside class="w-1/3 max-w-sm bg-white border-r border-slate-200 p-6 flex flex-col gap-6 overflow-y-auto">
+    <main class="flex-grow flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+
+        <aside
+            class="w-full lg:w-1/3 lg:max-w-sm bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 md:p-6 flex flex-col gap-6 lg:overflow-y-auto flex-shrink-0">
             <div>
                 <h2 class="font-bold text-lg mb-1">New Audit</h2>
                 <p class="text-sm text-slate-500 mb-4">Analyze a single live page or upload up to 10 HTML files.</p>
@@ -50,7 +62,7 @@
                         class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
 
-                <div class="flex items-center">
+                <div class="flex items-center" aria-hidden="true">
                     <div class="flex-grow border-t border-slate-200"></div>
                     <span class="mx-3 text-xs text-slate-400 font-bold uppercase">OR</span>
                     <div class="flex-grow border-t border-slate-200"></div>
@@ -59,48 +71,51 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">HTML Files (Max 10)</label>
                     <div
-                        class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:bg-slate-50 transition-colors">
-                        <label for="file-upload" class="cursor-pointer">
-                            <span class="text-blue-600 font-medium text-sm">Browse files</span>
-                            <span class="text-slate-500 text-sm"> or drag and drop</span>
+                        class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:bg-slate-50 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+                        <label for="file-upload" class="cursor-pointer block">
+                            <span class="text-blue-600 font-medium text-sm block md:inline">Browse files</span>
+                            <span class="text-slate-500 text-sm block md:inline"> or drag and drop</span>
                             <input type="file" id="file-upload" class="sr-only" accept=".html" multiple>
                         </label>
-                        <p id="file-name" class="text-xs text-slate-600 font-medium mt-2 break-all"></p>
+                        <p id="file-name" class="text-xs text-slate-600 font-medium mt-2 break-all" aria-live="polite">
+                        </p>
                     </div>
                 </div>
 
                 <button type="submit" id="submit-btn"
-                    class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-lg font-medium transition-colors shadow-sm">
+                    class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 md:py-2.5 rounded-lg font-medium transition-colors shadow-sm focus:ring-4 focus:ring-slate-200">
                     Run Project Audit
                 </button>
             </form>
         </aside>
 
-        <section class="flex-grow bg-slate-50 p-8 overflow-y-auto" id="results-pane">
-            <div class="max-w-3xl mx-auto flex flex-col items-center justify-center h-full text-slate-400 text-center"
+        <section class="flex-grow bg-slate-50 p-4 md:p-8 lg:overflow-y-auto" id="results-pane">
+
+            <div class="max-w-3xl mx-auto flex flex-col items-center justify-center h-full text-slate-400 text-center py-12 lg:py-0"
                 id="empty-state">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 <h2 class="text-xl font-medium text-slate-600">No active audit</h2>
-                <p class="text-sm mt-2">Submit a URL or files from the sidebar to view compliance reports.</p>
+                <p class="text-sm mt-2 max-w-xs md:max-w-none">Submit a URL or files from the sidebar to view compliance
+                    reports.</p>
             </div>
 
-            <div id="report-container" class="max-w-4xl mx-auto hidden space-y-8">
+            <div id="report-container" class="max-w-4xl mx-auto hidden space-y-8 pb-12 lg:pb-0">
                 <div
-                    class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    class="bg-white p-4 md:p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4 md:gap-0">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800">Project Overview</h2>
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800">Project Overview</h2>
                         <p class="text-sm text-slate-500">Average score across all analyzed files.</p>
                     </div>
-                    <div class="text-right">
-                        <p class="text-5xl font-black text-slate-800" id="aggregate-score-display">--</p>
+                    <div>
+                        <p class="text-4xl md:text-5xl font-black text-slate-800" id="aggregate-score-display">--</p>
                     </div>
                 </div>
 
-                <div id="file-reports-container" class="space-y-6">
+                <div id="file-reports-container" class="space-y-6" aria-live="polite">
                 </div>
             </div>
         </section>
@@ -152,7 +167,7 @@
                 if (data.error) return alert(data.error);
 
                 document.getElementById('aggregate-score-display').textContent = data.aggregateScore + '%';
-                document.getElementById('aggregate-score-display').className = `text-5xl font-black ${getScoreColor(data.aggregateScore)}`;
+                document.getElementById('aggregate-score-display').className = `text-4xl md:text-5xl font-black ${getScoreColor(data.aggregateScore)}`;
 
                 const container = document.getElementById('file-reports-container');
                 container.innerHTML = "";
@@ -166,20 +181,20 @@
                         fileReport.violations.forEach(issue => {
                             const failingCode = issue.nodes && issue.nodes[0] ? escapeHTML(issue.nodes[0].html) : "Code not available";
                             violationsHTML += `
-                                <div class="p-6 hover:bg-slate-50 transition-colors border-t border-slate-100">
-                                    <div class="flex items-start justify-between mb-2">
+                                <div class="p-4 md:p-6 hover:bg-slate-50 transition-colors border-t border-slate-100">
+                                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-2 gap-2 md:gap-0">
                                         <h4 class="font-bold text-slate-900">${issue.help}</h4>
-                                        <span class="text-xs bg-slate-100 text-slate-700 font-bold px-2 py-1 rounded uppercase">${issue.impact}</span>
+                                        <span class="text-[10px] md:text-xs bg-slate-100 text-slate-700 font-bold px-2 py-1 rounded uppercase self-start md:self-auto">${issue.impact}</span>
                                     </div>
                                     <p class="text-sm text-slate-600 mb-4">${issue.description}</p>
-                                    <div class="bg-slate-900 rounded-md p-3 mb-3 overflow-x-auto">
-                                        <code class="text-xs text-blue-300 font-mono">${failingCode}</code>
+                                    <div class="bg-slate-900 rounded-md p-3 mb-4 overflow-x-auto">
+                                        <code class="text-xs text-blue-300 font-mono whitespace-pre">${failingCode}</code>
                                     </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex gap-2">
-                                            ${issue.tags.map(tag => `<span class="text-[10px] bg-blue-50 text-blue-700 px-2 py-1 rounded font-bold uppercase border border-blue-200">${tag}</span>`).join('')}
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+                                        <div class="flex flex-wrap gap-2">
+                                            ${issue.tags.map(tag => `<span class="text-[9px] md:text-[10px] bg-blue-50 text-blue-700 px-2 py-1 rounded font-bold uppercase border border-blue-200">${tag}</span>`).join('')}
                                         </div>
-                                        <a href="${issue.helpUrl}" target="_blank" class="text-sm text-blue-600 hover:underline font-medium">WCAG Guide &rarr;</a>
+                                        <a href="${issue.helpUrl}" target="_blank" class="text-xs md:text-sm text-blue-600 hover:underline font-medium self-end sm:self-auto">WCAG Guide &rarr;</a>
                                     </div>
                                 </div>
                             `;
@@ -188,14 +203,14 @@
 
                     container.innerHTML += `
                         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
-                            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                            <div class="px-4 md:px-6 py-4 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-0">
                                 <div>
-                                    <h3 class="font-bold text-slate-800 text-lg">${fileReport.sourceFile}</h3>
-                                    <p class="text-xs text-slate-500 font-medium">Scanned ${fileReport.totalElements} DOM elements</p>
+                                    <h3 class="font-bold text-slate-800 text-base md:text-lg break-all">${fileReport.sourceFile}</h3>
+                                    <p class="text-xs text-slate-500 font-medium mt-1">Scanned ${fileReport.totalElements} DOM elements</p>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">File Health</p>
-                                    <p class="text-2xl font-black ${getScoreColor(fileReport.score)}">${fileReport.score}%</p>
+                                <div class="text-left md:text-right w-full md:w-auto flex flex-row md:flex-col justify-between md:justify-start items-center md:items-end">
+                                    <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-0 md:mb-1">File Health</p>
+                                    <p class="text-xl md:text-2xl font-black ${getScoreColor(fileReport.score)}">${fileReport.score}%</p>
                                 </div>
                             </div>
                             <div class="divide-y divide-slate-100">
@@ -206,6 +221,14 @@
                 });
 
                 document.getElementById('report-container').classList.remove('hidden');
+
+                // MOBILE UX: Scroll down to results automatically if on a smaller screen
+                if (window.innerWidth < 1024) {
+                    setTimeout(() => {
+                        document.getElementById('results-pane').scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                }
+
             } catch (err) {
                 alert("An error occurred during the audit.");
                 console.error(err);

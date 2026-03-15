@@ -25,60 +25,64 @@
     </style>
 </head>
 
-<body class="h-full bg-slate-50 text-slate-900 font-sans antialiased">
-
-    <a href="#main-content"
-        class="absolute left-[-9999px] top-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-md focus:left-4">Skip to main
-        content</a>
-
-    <div class="flex flex-col h-screen max-w-5xl mx-auto p-4 md:p-8">
-        <header class="flex items-center justify-between mb-8">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center" aria-hidden="true">
-                    <span class="text-white font-bold text-xl">A</span>
-                </div>
-                <h1 class="text-xl font-bold tracking-tight">A11yAudit <span class="text-blue-600">Sandbox</span></h1>
+<body class="h-[100dvh] bg-slate-50 text-slate-900 font-sans antialiased flex flex-col overflow-hidden">
+    <header
+        class="bg-white border-b border-slate-200 px-4 md:px-8 py-4 flex flex-col md:flex-row items-center justify-between shadow-sm z-10 gap-4 md:gap-0">
+        <div class="flex items-center justify-center gap-2 w-full md:w-auto md:justify-start">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0"
+                aria-hidden="true">
+                <span class="text-white font-bold text-xl">A</span>
             </div>
-            <nav>
-                <ul class="flex gap-6 text-sm font-medium text-slate-600 items-center">
-                    <li><a href="/" class="text-blue-600 border-b-2 border-blue-600 pb-1">Snippet Sandbox</a></li>
-                    <li><a href="/dashboard" class="hover:text-slate-900 transition-colors">Full Project Dashboard</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+            <h1
+                class="text-xl font-bold tracking-tight text-center md:text-left flex items-baseline gap-1.5 whitespace-nowrap">
+                A11yAudit <span class="text-blue-600 font-normal text-sm md:text-xl hidden md:block">| Snippet
+                    Sandbox</span>
+            </h1>
+        </div>
+        <nav aria-label="Main Navigation">
+            <ul class="flex gap-4 md:gap-6 text-sm font-medium text-slate-600 items-center justify-center flex-wrap">
+                <li><a href="/" class="text-blue-600 border-b-2 border-blue-600 pb-1 py-2">Snippet Sandbox</a></li>
+                <li><a href="/dashboard" class="hover:text-slate-900 transition-colors py-2">Project
+                        Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <main id="main-content"
-            class="flex flex-col flex-grow min-h-0 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <section id="chat-log" role="log" aria-live="polite"
-                class="flex-grow overflow-y-auto p-6 space-y-6 bg-slate-50/50">
-                <div class="flex gap-4">
-                    <div
-                        class="w-8 h-8 rounded-full bg-slate-200 flex flex-shrink-0 items-center justify-center text-xs font-bold uppercase">
-                        AI</div>
-                    <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[80%]">
-                        <p class="text-slate-700 font-medium">Hello! Paste your HTML snippets here. I will calculate a
-                            weighted score based on the length of your snippet and the severity of the issues.</p>
+    <main id="main-content" class="flex flex-col flex-grow min-h-0 bg-slate-200 overflow-hidden">
+
+        <section id="chat-log" role="log" aria-live="polite"
+            class="flex-grow overflow-y-auto p-4 md:p-6 space-y-6 w-full max-w-4xl mx-auto">
+            <div class="flex gap-4">
+                <div
+                    class="w-8 h-8 rounded-full bg-slate-300 flex flex-shrink-0 items-center justify-center text-xs font-bold uppercase text-slate-700">
+                    AI</div>
+                <div
+                    class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[90%] md:max-w-[80%]">
+                    <p class="text-slate-700 font-medium">Hello! Paste your HTML snippets here. I will calculate a
+                        weighted
+                        score based on the length of your snippet and the severity of the issues.</p>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="p-4 md:p-6 bg-white border-t border-slate-200 w-full flex-shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <form id="audit-form" class="max-w-4xl mx-auto space-y-4">
+                <div class="relative">
+                    <label for="user-input" class="sr-only">HTML code snippet</label>
+                    <textarea id="user-input" rows="3"
+                        class="w-full p-4 pb-12 text-slate-900 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none shadow-inner"
+                        placeholder="Paste HTML code snippet here..."></textarea>
+                    <div class="absolute bottom-3 right-3">
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded-lg font-medium text-sm transition-all shadow-md focus:ring-4 focus:ring-blue-300">
+                            Audit Snippet
+                        </button>
                     </div>
                 </div>
-            </section>
-
-            <section class="p-6 bg-white border-t border-slate-200">
-                <form id="audit-form" class="max-w-4xl mx-auto space-y-4">
-                    <div class="relative">
-                        <textarea id="user-input" rows="3"
-                            class="w-full p-4 pb-12 text-slate-900 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
-                            placeholder="Paste HTML code snippet here..."></textarea>
-                        <div class="absolute bottom-3 right-3">
-                            <button type="submit"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded-lg font-medium text-sm transition-all shadow-md">Audit
-                                Snippet</button>
-                        </div>
-                    </div>
-                </form>
-            </section>
-        </main>
-    </div>
+            </form>
+        </section>
+    </main>
 
     <script>
         const form = document.getElementById('audit-form');
