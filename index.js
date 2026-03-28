@@ -3,10 +3,12 @@ const path = require('path');
 const multer = require('multer');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const axeCore = require('axe-core');
-const fs = require('fs');
 
 const app = express();
-const upload = multer({ dest: 'uploads/' });
+
+// THESIS UPGRADE: Privacy-First Memory Storage
+// Files are held in RAM as Buffers, never written to disk.
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -24,7 +26,6 @@ const impactWeights = {
 async function performAudit(content, isUrl = false) {
     return new Promise(async (resolve, reject) => {
         try {
-            // Keep the virtual console to keep the terminal clean
             const virtualConsole = new VirtualConsole();
             virtualConsole.sendTo(console, { omitJSDOMErrors: true });
             virtualConsole.on("jsdomError", (err) => {
@@ -40,30 +41,15 @@ async function performAudit(content, isUrl = false) {
 
             const isSnippet = !isUrl && !content.toLowerCase().includes('<html');
             
-            // 1. BASE RULES: Disable color-contrast globally because don't have 'canvas' installed
-            const baseRules = {
-                'color-contrast': { enabled: false }
-            };
-
-            // 2. SNIPPET RULES: Disable document-level rules if it's just a small snippet
+            const baseRules = { 'color-contrast': { enabled: false } };
             const snippetRules = isSnippet ? {
-                'document-title': { enabled: false }, 
-                'html-has-lang': { enabled: false },
-                'page-has-heading-one': { enabled: false }, 
-                'landmark-one-main': { enabled: false },
-                'region': { enabled: false }, 
-                'bypass': { enabled: false }
+                'document-title': { enabled: false }, 'html-has-lang': { enabled: false },
+                'page-has-heading-one': { enabled: false }, 'landmark-one-main': { enabled: false },
+                'region': { enabled: false }, 'bypass': { enabled: false }
             } : {};
 
-            // 3. Combine the rules
-            const auditOptions = {
-                rules: {
-                    ...baseRules,
-                    ...snippetRules
-                }
-            };
+            const auditOptions = { rules: { ...baseRules, ...snippetRules } };
 
-            // Run the audit with the options
             dom.window.axe.run(dom.window.document, auditOptions, (err, results) => {
                 if (err) return reject(err);
 
@@ -124,25 +110,33 @@ app.post('/run-audit', upload.array('auditFiles', 10), async (req, res) => {
         let fileReports = [];
         let totalProjectScore = 0;
 
+        // THESIS UPGRADE: Concurrent, Non-Blocking File Processing
         if (req.files && req.files.length > 0) {
-            for (const file of req.files) {
-                const htmlContent = fs.readFileSync(file.path, 'utf8');
-                fs.unlinkSync(file.path);
-                
+            // We map over the files in RAM and process them concurrently
+            const filePromises = req.files.map(async (file) => {
+                // Convert Buffer from RAM directly to string
+                const htmlContent = file.buffer.toString('utf8');
                 const report = await performAudit(htmlContent, false);
-                fileReports.push({ sourceFile: file.originalname, ...report });
-                totalProjectScore += report.score;
-            }
-        } else if (urlInput.startsWith('http')) {
+                return { sourceFile: file.originalname, ...report };
+            });
+
+            // Wait for all asynchronous tasks to finish
+            const processedReports = await Promise.all(filePromises);
+            
+            fileReports.push(...processedReports);
+            totalProjectScore += processedReports.reduce((sum, report) => sum + report.score, 0);
+        } 
+        else if (urlInput.startsWith('http')) {
             const report = await performAudit(urlInput, true);
             fileReports.push({ sourceFile: urlInput, ...report });
             totalProjectScore += report.score;
-        } else if (urlInput.trim().length > 0) {
-            // This captures the raw snippet text from the sandbox UI
+        } 
+        else if (urlInput.trim().length > 0) {
             const report = await performAudit(urlInput, false);
             fileReports.push({ sourceFile: "Snippet", ...report });
             totalProjectScore += report.score;
-        } else {
+        } 
+        else {
             return res.status(400).json({ error: "Please provide a valid live URL, snippet, or HTML files." });
         }
 
@@ -155,10 +149,10 @@ app.post('/run-audit', upload.array('auditFiles', 10), async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Audit Engine Error:", error);
+        console.error("❌ Audit Engine Error:", error);
         res.status(500).json({ error: error.message });
     }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`A11yAudit Engine active on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 A11yAudit Engine active on port ${PORT}`));
