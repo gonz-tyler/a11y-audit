@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>A11yAudit Custom Ruleset Validation</title>
+</head>
+
+<body>
+    <main>
+        <h1>Testing Advanced Pedagogical Rules</h1>
+
+        <section>
+            <h2>1. The Vague Link Test</h2>
+            <p>To view our full report, <a href="/report.pdf">Click Here</a>.</p>
+            <p>For additional details, <a href="/details">Read More</a>.</p>
+        </section>
+
+        <section>
+            <h2>2. The ARIA Stutter Test</h2>
+            <button aria-label="Submit Form">Submit Form</button>
+        </section>
+
+        <section>
+            <h2>3. Semantic Deprecation Test</h2>
+            <p>This is a test of <b>outdated bold tags</b> and <i>outdated italic tags</i> that provide no semantic
+                value to screen readers.</p>
+        </section>
+
+        <section>
+            <h2>4. Redundant Adjacent Links Test</h2>
+            <div class="product-card">
+                <a href="/products/sneakers"><img src="sneaker.jpg" alt="Running Sneakers"></a>
+                <a href="/products/sneakers">Buy Running Sneakers</a>
+            </div>
+        </section>
+
+    </main>
+</body>
+
+</html>

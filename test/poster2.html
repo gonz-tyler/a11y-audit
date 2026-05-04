@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A11yAudit - Unified Poster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Updated Censor Class to wrap perfectly within paragraphs */
+        .censor {
+            background-color: #1a1a1a !important;
+            color: #1a1a1a !important;
+            border-radius: 2px;
+            user-select: none;
+            padding: 0px 4px;
+            margin: 0 2px;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-900 antialiased h-screen w-screen overflow-hidden flex flex-col">
+
+    <nav class="border-b border-gray-200 py-4 px-8 flex justify-between items-center w-full max-w-7xl mx-auto shrink-0">
+        <div class="font-extrabold text-2xl tracking-tight">A11yAudit.</div>
+        <div class="hidden md:flex space-x-8 text-base font-medium text-gray-600">
+            <a href="#" class="hover:text-black">Product</a>
+            <a href="#" class="censor hover:text-black">Enterprise</a>
+            <a href="#" class="hover:text-black">Documentation</a>
+            <a href="#" class="hover:text-black border-b-2 border-black pb-1">Case Study</a>
+        </div>
+        <div>
+            <button class="bg-black text-white px-6 py-2.5 text-sm font-semibold hover:bg-gray-800 transition-colors">
+                Run Audit
+            </button>
+        </div>
+    </nav>
+
+    <header class="w-full max-w-7xl mx-auto px-8 py-12 text-center border-b border-gray-100 shrink-0">
+        <h1 class="md:text-8xl font-extrabold tracking-tight mb-6">
+            Bridging the <span class="censor">Accessibility</span> Gap.
+        </h1>
+        <p class="text-xl text-gray-500 max-w-3xl mx-auto mb-8 leading-relaxed">
+            Automated tools hit a "60% ceiling." <span class="censor">They generate generic reports that nobody
+                reads.</span> They tell you what is broken, but not why it matters. Learn how pedagogical auditing
+            creates better experiences for everyone.
+        </p>
+
+        <div class="flex justify-center items-center space-x-4 mt-4">
+            <button
+                class="border-2 border-black text-black px-6 py-2.5 font-semibold hover:bg-gray-50 transition-colors">
+                Gonzalo Escolar Tyler
+            </button>
+            <button class="bg-black text-white px-6 py-2.5 font-semibold hover:bg-gray-800 transition-colors censor">
+                Gonzalo Escolar Tyler
+            </button>
+        </div>
+    </header>
+
+    <main class="w-full mx-auto px-8 py-10 flex-grow flex flex-col justify-center">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-full w-full min-h-0 pb-10">
+
+            <article
+                class="border border-gray-200 p-8 flex flex-col h-full hover:shadow-lg transition-shadow md:row-span-2 md:col-start-1 md:row-start-1">
+                <div class="flex items-center mb-4">
+                    <h3 class="text-2xl font-bold">1. <span class="censor">Introduction</span></h3>
+                </div>
+                <p class=" text-gray-700 text-lg leading-relaxed flex-grow">
+                    Standard automated tools pass generic text like "Click Here" and fail to explain issues clearly.
+                    <span class="censor">This lack of context leaves development teams completely guessing how to
+                        resolve
+                        the underlying markup problems.</span>
+                    To a screen reader, this creates a maze of dead ends. A11yAudit was designed to close this gap
+                    through
+                    developer education rather than simple pass/fail scoring.
+                </p>
+                <div
+                    class="bg-gray-100 w-full h-96 shrink-0 mt-5 flex items-center justify-center text-gray-400 text-sm font-medium censor ">
+                    [ Structural Image ]
+                </div>
+            </article>
+
+            <article
+                class="border border-gray-200 p-8 flex flex-col h-full hover:shadow-lg transition-shadow md:col-start-2 md:row-start-1">
+                <div class="flex items-center mb-4">
+                    <h3 class="text-2xl font-bold">2. Architectural Methodology</h3>
+                </div>
+                <p class="text-gray-700 text-lg leading-relaxed flex-grow">
+                    Engineered as a high-performance Node.js web application.
+                    <span class="censor">Traditional architectures require spinning up heavy graphical instances that
+                        drain
+                        server processing power.</span>
+                    Using <span class="font-mono text-sm bg-gray-200 px-1 py-0.5">jsdom</span> and a custom
+                    DOM-traversal algorithm, it securely parses HTML buffers in-memory.
+                </p>
+            </article>
+
+            <article
+                class="border border-gray-200 p-8 flex flex-col h-full hover:shadow-lg transition-shadow md:col-start-3 md:row-start-1">
+                <div class="flex items-center mb-4">
+                    <h3 class="text-2xl font-bold">3. Results & Benchmarks</h3>
+                </div>
+                <p class="text-gray-700 text-lg leading-relaxed flex-grow">
+                    When benchmarked against Google Lighthouse, A11yAudit successfully flagged context-blind errors that
+                    standard engines passed.
+                    <span class="censor">The testing environment used a tightly controlled suite of vulnerable
+                        files.</span>
+                    It replaced generic checks with IDE-style extraction.
+                </p>
+            </article>
+
+            <div
+                class="flex items-center justify-center text-gray-400 font-medium overflow-hidden md:col-span-2 md:col-start-2 md:row-start-2 shadow-inner">
+                <img src="../public/images/banner.png" alt="A11yAudit Dashboard Interface"
+                    class="w-full h-auto object-cover">
+            </div>
+
+            <article
+                class="border border-gray-200 p-8 flex flex-col h-full hover:shadow-lg transition-shadow md:row-span-2 md:col-start-4 md:row-start-1">
+                <div
+                    class="w-full h-64 shrink-0 mb-5 flex items-center justify-center text-gray-400 text-sm font-medium">
+                    <img src="../public/images/bing_generated_qrcode.svg" alt="QR Code for A11yAudit Demo"
+                        class="w-64 h-64">
+                </div>
+                <div class="flex items-center mb-4">
+                    <h3 class="text-2xl font-bold">4. Conclusion & Impact</h3>
+                </div>
+                <p class="text-gray-700 text-lg leading-relaxed flex-grow">
+                    By shifting the focus from programmatic punishment to pedagogical feedback, A11yAudit lowers the
+                    cognitive load of accessibility compliance.
+                    <span class="censor">Junior engineers no longer have to decipher highly academic W3C specifications
+                        on
+                        their own.</span>
+                    It provides a tool that teaches the <em>why</em> and <em>how</em> resulting in a more inclusive web.
+                </p>
+            </article>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

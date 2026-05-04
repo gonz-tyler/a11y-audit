@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>A11y Benchmark Suite</title>
+    <style>
+        /* Injected Fault 5: Low Color Contrast */
+        .bad-contrast {
+            color: #d3d3d3;
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Accessibility Benchmark Test</h1>
+
+        <img src="missing-alt.png">
+
+        <form>
+            <input type="text" id="username" name="username">
+        </form>
+
+        <a href="/details">Click Here</a>
+
+        <img src="decorative.png" alt="">
+
+        <p class="bad-contrast">This text is very difficult to read.</p>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusive Web Design - Poster Overlay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* The Censor Bar Utility Class */
+        .censor {
+            background-color: #1a1a1a !important;
+            color: #1a1a1a !important;
+            border-radius: 2px;
+            user-select: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased h-screen w-screen overflow-hidden relative">
+
+    <div class="h-full w-full flex flex-col bg-white">
+        <nav
+            class="border-b border-gray-200 py-4 px-8 flex justify-between items-center w-full max-w-7xl mx-auto shrink-0">
+            <div class="font-bold text-xl tracking-tight">DesignSystem.</div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
+                <a href="#" class="hover:text-black">Principles</a>
+                <a href="#" class="censor hover:text-black">Components</a>
+                <a href="#" class="hover:text-black">Accessibility</a>
+                <a href="#" class="hover:text-black border-b-2 border-transparent">About</a>
+            </div>
+            <div>
+                <button class="bg-black text-white px-5 py-2 text-sm font-semibold hover:bg-gray-800 transition-colors">
+                    Get Started
+                </button>
+            </div>
+        </nav>
+
+        <header class="w-full max-w-7xl mx-auto px-8 py-10 text-center border-b border-gray-100 shrink-0">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">Building the <span
+                    class="censor">Inclusive</span> Web.</h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
+                Web accessibility is not an afterthought; <span class="censor">it is a fundamental pillar of modern
+                    engineering.</span> Learn how semantic structure and empathetic design create better experiences for
+                everyone.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <button
+                    class="border-2 border-black text-black px-6 py-2.5 font-semibold hover:bg-gray-50 transition-colors">
+                    Read the Docs
+                </button>
+                <button
+                    class="bg-black text-white px-6 py-2.5 font-semibold hover:bg-gray-800 transition-colors censor">
+                    Audit Your Site
+                </button>
+            </div>
+        </header>
+
+        <main class="w-full max-w-7xl mx-auto px-8 py-10 flex-grow flex flex-col justify-center">
+            <div class="flex justify-between items-end mb-6 shrink-0">
+                <h2 class="text-2xl font-bold tracking-tight censor">Core Methodologies</h2>
+                <a href="#"
+                    class="text-sm font-semibold text-gray-500 hover:text-black border-b border-transparent pb-1">View
+                    all &rarr;</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full min-h-0 pb-10">
+                <article class="border border-gray-200 p-6 flex flex-col h-full">
+                    <div
+                        class="bg-gray-100 w-full h-32 shrink-0 mb-5 flex items-center justify-center text-gray-400 text-sm font-medium censor">
+                        [ Structural Image ]
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 shrink-0">Semantic HTML5</h3>
+                    <p class="text-gray-600 text-sm mb-4 flex-grow overflow-hidden">
+                        Discover why using proper tags like &lt;nav&gt;, &lt;main&gt;, and &lt;article&gt; is vastly
+                        superior to relying on <span class="censor">endless generic div containers.</span>
+                    </p>
+                    <a href="#"
+                        class="shrink-0 inline-block border-t border-gray-200 pt-3 text-xs font-semibold text-black uppercase tracking-wider">Explore
+                        Topic</a>
+                </article>
+
+                <article class="border border-gray-200 p-6 flex flex-col h-full">
+                    <div
+                        class="bg-gray-100 w-full h-32 shrink-0 mb-5 flex items-center justify-center text-gray-400 text-sm font-medium">
+                        [ Contrast Image ]
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 shrink-0 censor">Visual Perceivability</h3>
+                    <p class="text-gray-600 text-sm mb-4 flex-grow overflow-hidden censor block h-16">
+                        Ensure your color palettes meet WCAG AAA contrast ratios. A beautiful design is only successful
+                        if every user can comfortably read it.
+                    </p>
+                    <a href="#"
+                        class="shrink-0 inline-block border-t border-gray-200 pt-3 text-xs font-semibold text-black uppercase tracking-wider">Explore
+                        Topic</a>
+                </article>
+
+                <article class="border border-gray-200 p-6 flex flex-col h-full">
+                    <div
+                        class="bg-gray-100 w-full h-32 shrink-0 mb-5 flex items-center justify-center text-gray-400 text-sm font-medium">
+                        [ Keyboard Image ]
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 shrink-0">Keyboard Operability</h3>
+                    <p class="text-gray-600 text-sm mb-4 flex-grow overflow-hidden">
+                        Put the mouse away. <span class="censor">Learn how to manage DOM focus states</span> and avoid
+                        creating invisible keyboard traps.
+                    </p>
+                    <a href="#"
+                        class="shrink-0 inline-block border-t border-gray-200 pt-3 text-xs font-semibold text-black uppercase tracking-wider censor">Explore
+                        Topic</a>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <div class="absolute inset-0 pointer-events-none p-8 z-50">
+
+        <div
+            class="absolute top-24 left-10 w-80 bg-red-500/80 backdrop-blur-md border border-gray-200 rounded-lg p-6 m-6 pointer-events-auto">
+            <div class="w-10 h-1 bg-red-500 mb-4 rounded-full"></div>
+            <h4 class="font-bold text-lg mb-2">The Context Blindspot</h4>
+            <p class="text-sm text-black leading-relaxed">
+                Standard automated tools pass generic text like "Click Here". To a screen reader, this creates a maze of
+                dead ends and invisible, contextless content.
+            </p>
+        </div>
+
+        <div
+            class="absolute bottom-72 left-16 w-80 bg-blue-500/80 backdrop-blur-md border border-gray-200 rounded-lg p-6 m-6 pointer-events-auto">
+            <div class="w-10 h-1 bg-blue-500 mb-4 rounded-full"></div>
+            <h4 class="font-bold text-lg mb-2">The ARIA Stutter</h4>
+            <p class="text-sm text-black leading-relaxed">
+                Over-engineering accessibility can be just as damaging as ignoring it. Redundant labels cause screen
+                readers to stutter, frustrating users.
+            </p>
+        </div>
+
+        <div
+            class="absolute top-72 right-80 w-80 bg-green-500/80 backdrop-blur-md border border-gray-200 rounded-lg p-6 m-6 pointer-events-auto">
+            <div class="w-10 h-1 bg-green-500 mb-4 rounded-full"></div>
+            <h4 class="font-bold text-lg mb-2">Pedagogical Auditing</h4>
+            <p class="text-sm text-black leading-relaxed">
+                A11yAudit doesn't just give a pass/fail score. It extracts exact code snippets and explains the human
+                impact of the barrier, reducing cognitive load.
+            </p>
+        </div>
+
+        <div
+            class="absolute bottom-0 right-24 w-80 bg-purple-500/80 backdrop-blur-md rounded-lg p-6 m-6 pointer-events-auto">
+            <div class="w-10 h-1 bg-purple-500 mb-4 rounded-full"></div>
+            <h4 class="font-bold text-lg mb-2">JavaScript-Only Components</h4>
+            <p class="text-sm text-black leading-relaxed">
+                Many modern component libraries rely heavily on JavaScript for basic functionality. This creates
+                invisible barriers for users with assistive technologies and those on slow connections.
+            </p>
+        </div>
+
+        <div class="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+            <div class="w-80 bg-white/80 border border-gray-200 backdrop-blur-md rounded-lg p-6 pointer-events-auto">
+                <h1 class="text-center font-bold text-lg mb-2">A11yAudit</h1>
+                <p class="text-center text-sm text-black leading-relaxed">
+                    bridging the accessibility gap
+                </p>
+                <p class="text-center text-xs text-gray-500 mt-4">
+                    Gonzalo Escolar Tyler
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
